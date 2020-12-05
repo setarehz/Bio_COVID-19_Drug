@@ -22,5 +22,15 @@ normalized_I = (Interaction_score-Interaction_score.min())/(Interaction_score.ma
 df = pd.DataFrame(data)
 df['Normalized_query_score'] = normalized_Q
 df['Normalized_interaction_score'] = normalized_I
+
+#Seprate the drug names and gene names into two coloumns
+drugold = data['Drug']
+
+drugnew = []
+for each in drugold :
+    drugnew.append(each.lstrip())
+data['Drug_name']=drugnew
+
+#save to a new CSV file
 df.to_csv('ffinal_Drugs_genes.csv', index=False, sep=',')
-print(df['Normalized_query_score'].max())
+#print(df['Normalized_query_score'].max())
