@@ -22,5 +22,5 @@ normalized_I = (Interaction_score-Interaction_score.min())/(Interaction_score.ma
 df = pd.DataFrame(data)
 df['Normalized_query_score'] = normalized_Q
 df['Normalized_interaction_score'] = normalized_I
-df.to_csv('final_Drugs_genes.csv', index=False, sep=',')
+df.to_csv('ffinal_Drugs_genes.csv', index=False, sep=',')
 print(df['Normalized_query_score'].max())
