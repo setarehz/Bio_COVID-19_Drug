@@ -11,7 +11,7 @@ from colour import Color
 
 
 
-drug_gene_data = pd.read_csv('final_Drugs_genes.csv') # importing Dataset
+drug_gene_data = pd.read_csv('.\Data\final_Drugs_genes.csv') # importing Dataset
 drugs = drug_gene_data["Drug_name"]
 genes = drug_gene_data["GENE"]
 interaction = drug_gene_data['Normalized_interaction_score']
@@ -104,7 +104,7 @@ drug_nodes= convert_column_to_list(drugs) # a list of drugs
 
 #....................................DD Graph................................
 
-drug_data = pd.read_csv('Drugs Similarity.csv')
+drug_data = pd.read_csv('.\Data\Drugs Similarity.csv')
 
 First_Drug = drug_data['First_Drug_Name']
 Second_Drug = drug_data['Second_Drug_Name']
@@ -115,7 +115,7 @@ Second_Drug_list = convert_column_to_list(Second_Drug)
 
 
 #...................................PP Graph (Edges)..............................
-PPI_data = pd.read_csv('final_PPI.csv')
+PPI_data = pd.read_csv('.\Data\final_PPI.csv')
 
 viruse_protein = PPI_data['Virus']
 human_protein = PPI_data['Gene names']
@@ -344,8 +344,9 @@ columns_name =['Drug_Protein Pair', 'Max DDT', 'Sum DDT', 'Max DTT' , 'Sum DTT',
 
 
 data_list = []
-classification = pd.read_excel('clasification.xlsx')
+classification = pd.read_excel('.\Data\clasification.xlsx')
 
+#these two loops generate a table of different pairs as well as their features and labels
 for i in unique_drug_nodes[190:191]:
     for j in unique_protein_nodes[:]:
         row = []
@@ -369,6 +370,6 @@ for i in unique_drug_nodes[190:191]:
 
 
 #
-classification.to_excel(r'C:\Users\pascal\anaconda3\PycharmProjects\pythonProject\bio\graph\finall\clasification.xlsx',
+classification.to_excel(r'.\Data\clasification.xlsx',
                   index=False)
 
