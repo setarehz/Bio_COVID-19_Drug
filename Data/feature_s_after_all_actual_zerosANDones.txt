@@ -1,0 +1,46 @@
+degree of starting node    0.001256
+Max DTTT                   0.004018
+max deg DTTT               0.008215
+Sum DTTT                   0.010811
+drug_centrality            0.019307
+betweenness_cen drug       0.025355
+target_centrality          0.053671
+max deg DDDT               0.223197
+Max DDDT                   0.245605
+max deg DDT                0.257044
+Max DDT                    0.273638
+
+Sum DTDT                   0.294228
+Max DTDT                   0.300794
+betweenness_cen target     0.361780
+max deg DTDT               0.366327
+degree of ending node      0.517789
+Sum DDDT                   0.537492
+Sum DDT                    0.549851
+Label                      1.000000
+
+
+Selected Features: [False  True False False False False  True False False  True False  True
+ False False  True  True False False]
+Feature Ranking: [ 8  1  7  3 13 11  1  5  2  1 10  1 12  6  1  1  9  4]
+['Max DDT', 
+=='Sum DDT'==, 'Max DDDT', 'Sum DDDT', 'Max DTTT', 'Sum DTTT', 
+=='Max DTDT'==, 'Sum DTDT', 'degree of starting node', 
+=='degree of ending node'==, 'max deg DDT', 
+=='max deg DDDT'==, 'max deg DTTT', 'max deg DTDT', 
+=='drug_centrality'==, 
+=='target_centrality'==, 'betweenness_cen drug', 'betweenness_cen target']
+
+Lasso: max deg DDDT               9.198515e-16
+
+backward elimination : ['Max DDT', 'Sum DDT', 'Sum DDDT', 'Max DTTT', 'Sum DTTT', 'Max DTDT', 'Sum DTDT', 'degree of starting node', 'degree of ending node', 'max deg DDT', 'max deg DDDT', 'max deg DTTT', 'max deg DTDT', 'drug_centrality', 'target_centrality', 'betweenness_cen drug', 'betweenness_cen target']
+
+
+Trees:
+
+[0.0168982  [0.08021284] 0.01825806 [0.1775128]  0.00883399 0.0110559
+ 0.03241236 [0.03595358] 0.01584591 [0.33756722] 0.02155124 0.02325163
+ 0.01861446 [0.04328902] 0.01542523 [0.12733347] 0.01598408]
+
+
+chosen: Sum DDT, degree of ending node, max deg DTDT, Max DTDT, max deg DTDT, target_centrality
