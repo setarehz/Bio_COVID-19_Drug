@@ -7,35 +7,21 @@ The problem can be illustrated as a heterogeneous graph. nodes can be drugs or p
 This is a link prediction problem which we are going to predict new edge with drug and protein node endings.  
 
 Datasets:
-First step is gathering the datasets from Gordon dataset in “A SARS-CoV-2 protein interaction map reveals targets for drug repurposing” and ‘Khorsand’ article “SARS-CoV-2-human protein-protein interaction network” then Uniport website was used to map the uniport ID mentioned in 'Khorsand' article to provide a link between two above datasets.
-After that, we extracted related drugs and scores from the Drug Gene Interaction Database with JS script.
-
---We obtain SMILES structures from drug formula with the help of ' NCI ' (National Cancer Institute), then similarity between each pair of drugs calculated by their fingerprints with the TANIMOTO algorithm.Similarity scores are in a range of (1, 0). It is obvious that, 1(one) shows the similarity of a drug with itself;   and 0(zero) shows this pair of drugs has no similarity in TANIMOTO's system ;On the other hand, there isn't any edge between these two particular drugs.For accuracy and improve our process, we removed rows with 1 (one) or 0 (zero) similarity scores.you can see the codes as Drug_similarities.Py in Script folder.
-All datasest would be found in Data folder.
+We  used  three  main  datasets  in  this  survey:   Drug-Drug  Similarity  (DD  sim),  Protein-ProteinInteraction (PPI) and, Drug-Target Interaction (DTI) datasets.
 
 
 Methods:
-First, we used TANIMOTO algorithm based on their smiles with Rdkit to find the similarity between drugs, which we would explain it, in more detail in next slide. 
-Then we import our data to a network with all properties.
-The next step is to apply graph mining techniques like depth first search for each group of path structures to determine paths with drug and protein endings with maximum 3 length with scores.Finally, the new DTIs are predicted based on our produced features by our classification model.
-
-The Graph:
-Mainly, there are three different edges in the graph, which connect protein-protein-nodes, drug-drug nodes and protein-drug nodes. For each of these edges we have different scores.Notice that We just investigate 3 or less length path.  Due to paths structures we group and navigate paths with scores.we look at 6 different path structures. The main features are extracted from these structures. (DTT,DDT,DDDT,DTDT,DTTT,DDTT)
-We shoud note that in we used Normalization for Drugs and genes interaction scores and path scores for each structures.
+The problem of predicting novel DTIs can be addressed as a link prediction problem.  As mentionedin the previous section, we first constructed a weighted heterogeneous graph. So, the goal is inferringmissing links between drugs and targets.The weighted, undirected graphG(V,E) illustrated the dataset in which each edgee= (u,v)∈Ereferred to an interaction betweenuandvand a similarity if bothuandvwere drugs. 
 
 Features:
-We have 20 features : 'Max DDT', 'Sum DDT','Max DTT' ,'Sum DTT','Max DDDT','Sum DDDT','Max DDTT','Sum DDTT','Max DTTT','Sum DTTT','Max DTDT','Sum DTDT','degree of starting node','degree of ending node','max deg DDT','max deg DTT','max deg DDDT','max deg DDTT','max deg DTTT','max deg DTDT'
-By Max we mean the maximum score of a path for a specific path structure.
-By Sum, we mean the summation of all paths for a specific path structure.
-We also consider the degree of  start and end nodes and maximum degree for each path structure.
-We used 4 different methods for feature selection such as: calculating all Pearson correlations, Recursive Feature Elimination, Embedded Method (feature selection using Lasso regularization) and  Backward Elimination.
-After that we picked 6 most relevant and common features which determined by the above algorithms; 'degree of ending node', 'max deg DTTT','Sum DTTT' ,'Max DTDT','Sum DTDT','max deg DDDT' are chosen ones.
+The next step was generating features based on the paths between each pair of drug-target nodesin the graph.  ConsiderX={x1,x2,...,xn∗m}is the feature vector andY={y1,y2,...,yn∗m}isthe label vector wherenis the number of drugs andmis the number of targets.  For all possiblepairs  of  drug-targets,  we  have  a  feature  vector  and  a  label  which  is  1  if  there  exists  an  edgebetween  those  nodes  in  the  graph  and  0  otherwise.   Therefore,  there  is  a  classification  problemwhich  we  attempt  to  predict  novel  interactions  between  drugs  and  their  targets  using  differentreliable machine learning models.
+we map the graphG(V,E) into spaceRdwhered <<|V|.  In other words, they represented each node in the graph by a feature vector that pre-served all properties of the main graph which was smaller than the real number of vertices in thegraph.Here, for each drug-target pair, we extracted 18 features.  The first 6 features were related tothe specific pair (namely, degree, Closeness Centrality, and Betweenness Centrality of both drugand protein nodes) and 12 remaining features were relevant to all paths length less than or equal3  between  them.   Closeness  centrality  and  Betweenness  Centrality  are  measures  that  show  the centrality  and  accessibility  of  a  node  in  a  given  graph.   Closeness  centrality  of  a  nodeuis  thereciprocal  of  the  average  shortest  path  distance  to  u  overalln−1  reachable  nodes.
+whereσ(s,t) is the number of shortest (s,t)-paths,  andσ(s,t|v) is the weight of those pathspassing through some nodevother thans,t.  Ifs=t,σ(s,t) = 1, and ifv∈s,t,σ(s,t|v) = 0.Scores were calculated based on path scores used by DTiGEMS method.
+In feature selection section, in the main dataset, we have 18 features and a label.  The label shows the known direct interactionbetween  a  drug  and  a  protein  target.   We  applied  five  different  methods  for  feature  selection:calculating all Pearson Correlations, Recursive Feature Elimination, Embedded Method (featureselection using Lasso Regularization),Backward Elimination and Extra Trees Classifier.After that we picked the 6 most relevant and common features determined by the above algo-rithms.
+ 
+ Model:
+ We  are  facing  a  high  imbalanced  dataset  containing  more  than  624,000  pairs  in  the  unlabeledclass (unknown interaction) and 764 pairs in the positive class (known interaction).  We createdthe negative class (without interaction) for classification and narrowing our results based on twoprinciples; first, we assumed unlabeled pairs which have no connecting path (between the drug andtarget) as a member of the negative class; comparing these pairs to the positive pairs by illustratingthe distribution of each features in the dataset, some noticeable results were observed; They werehighly in different in two features.  secondly, we assumed some other unlabeled pairs as negativepairs based on the detected differences.  At the end, we were able to split the data into 764 positivepairs, 543,325 negative pairs, and 80,965 unlabeled pairs.We  applied  different  models1to  predict  novel  DTIs;  six  models  were  chosen  based  on  theirreliability and F1 score which are described in the next subs-section.  OSVM, Isolation Forest, andEllipsis are mostly used for anomaly detection,  however,  when the dataset is highly imbalancedthey can be used to detect minority class or learn the pattern of just one class.
+ Result:
+In common novel DTIs predicted by the six models were stored; and repeated drugs were sortedbased on their frequency in the outcomes.  Finally, possible medicines for the COVID-19 predictedby the models and some publications proving the efficiency of those against the disease can be seen in result file in data folder.
 
-Classification:
-We applied two different binary classifiers to predict novel DTIs, namely: logistic regression and Support vector machine (SVM) . In the first stage we divided our dataset into train and test sets by 70% and 30%.
-Logistic regression is a proper algorithm for binary classification problems.you can find the code in Logistic_Regression.py in Scripts folder
-Support Vector Machine (SVM) is a discriminating classifier.it determines the line separating the whole dataset in two parts where in each class lay in either side.Also, you can find the python cod of this method in Scripts folder.
-
-Plots:
-For increasing the undrestanding of models and confusion matrix we have plotted them in Plots folder.
 
